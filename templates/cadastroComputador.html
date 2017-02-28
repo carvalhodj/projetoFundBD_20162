@@ -10,16 +10,20 @@
 </head>
 <body>
 <div class="container">
-    <h1>Página de cadastro de clientes</h1>
+    <h1>Página de cadastro de computadores</h1>
     <hr>
-    <form action="{{ url_for("cadastroCliente") }}" method="POST">
+    <form action="{{ url_for("cadastroComputador") }}" method="POST">
         <div class="form-group">
-            <label for="nome">Nome:</label>
-            <input type="text" class="form-control" name="nome">
+            <label for="num-serie">Número de série:</label>
+            <input type="text" class="form-control" name="num-serie">
         </div>
         <div class="form-group">
-            <label for="cpf">CPF:</label>
-            <input type="text" class="form-control" name="cpf">
+            <label for="model-comp">Modelo do computador:</label>
+            <input type="text" class="form-control" name="modelo-comp">
+        </div>
+        <div class="form-group">
+            <label for="cpf-cliente">CPF do cliente:</label>
+            <input type="text" class="form-control" name="cpf-cliente">
         </div>
         <input type="submit" value="Cadastrar">
     </form>

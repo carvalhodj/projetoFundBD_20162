@@ -6,26 +6,28 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <title>Lista de Clientes</title>
+    <title>Lista de Computadores</title>
 </head>
 <body>
-    <h1>Lista de Clientes</h1>
+    <h1>Lista de Computadores</h1>
     <hr>
     <table class="table">
     <thead class="thead-default">
         <tr>
-            <th align="center"><h3>CPF</h3></th>
-            <th align="center"><h3>Nome</h3></th>
+            <th align="center"><h3>Número de série</h3></th>
+            <th align="center"><h3>Modelo</h3></th>
+            <th align="center"><h3>CPF Cliente</h3></th>
             <th align="center"><h3>Editar</h3></th>
             <th align="center"><h3>Excluir</h3></th>
         </tr>
     </thead>
-        {%  for cliente in clientes %}
+        {%  for computador in computadores %}
         <tr>
-            <td>{{ cliente.cpf }}</td>
-            <td>{{ cliente.nomeCli }}</td>
-            <td><a href="/editarCliente/{{ cliente.cpf }}">Editar</a></td>
-            <td><a href="/excluirCliente/{{ cliente.cpf }}">X</a></td>
+            <td>{{ computador.numSerie }}</td>
+            <td>{{ computador.modelo }}</td>
+            <td>{{ computador.cpfCli }}</td>
+            <td><a href="/editarComputador/{{ computador.numSerie }}">Editar</a></td>
+            <td><a href="/excluirComputador/{{ computador.numSerie }}">X</a></td>
         </tr>
         {% endfor %}
     </table>
