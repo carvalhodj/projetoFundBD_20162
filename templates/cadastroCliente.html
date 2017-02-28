@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar cliente</title>
+</head>
+<body>
+    <h1>Página de cadastro de clientes</h1>
+    <hr>
+    <form action="{{ url_for("cadastroCliente") }}" method="POST">
+        <table>
+            <tr>
+                <td>Nome</td>
+                <td><input type="text" name="nome"> </td>
+            </tr>
+            <tr>
+                <td>CPF</td>
+                <td><input type="text" name="cpf"> </td>
+            </tr>
+        </table>
+        <input type="submit" value="Cadastrar">
+    </form>
+</body>
+</html>

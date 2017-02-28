@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Clientes</title>
+</head>
+<body>
+    <h1>Lista de Clientes</h1>
+    <hr>
+    <table border="1px">
+        <tr>
+            <td><h3>CPF</h3></td>
+            <td><h3>Nome</h3></td>
+        </tr>
+        {%  for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.cpf }}</td>
+            <td>{{ cliente.nomeCli }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="{{ url_for("index") }}">Retornar à home</a>
+</body>
+</html>
