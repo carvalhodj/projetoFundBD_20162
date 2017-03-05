@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Lista de peças</title>
+</head>
+<body>
+    <h1>Lista de Peças</h1>
+    <hr>
+    <table class="table">
+    <thead class="thead-default">
+        <tr>
+            <th align="center"><h3>Código</h3></th>
+            <th align="center"><h3>Descrição</h3></th>
+            <th align="center"><h3>Editar</h3></th>
+            <th align="center"><h3>Excluir</h3></th>
+        </tr>
+    </thead>
+        {%  for peca in pecas %}
+        <tr>
+            <td>{{ peca.codPeca }}</td>
+            <td>{{ peca.descricao }}</td>
+            <td><a href="/editarPeca/{{ peca.codPeca }}">Editar</a></td>
+            <td><a href="/excluirPeca/{{ peca.codPeca }}">X</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="{{ url_for("index") }}">Retornar à home</a>
+</body>
+</html>

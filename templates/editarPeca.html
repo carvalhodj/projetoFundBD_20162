@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Editar peça</title>
+</head>
+<body>
+    <div class="container">
+    <h1>Página de edição de peças</h1>
+    <hr>
+    <form action="" method="POST">
+         <div class="form-group">
+             <label for="cod-peca">Código da peça:</label>
+            <input type="text" class="form-control" name="cod-peca" value="{{ peca.codPeca }}">
+        </div>
+        <div class="form-group">
+            <label for="descricao">Descrição da peça:</label>
+            <input type="text" class="form-control" name="descricao" value="{{ peca.descricao }}">
+        </div>
+        <input type="submit" value="Atualizar">
+    </form>
+    </div>
+</body>
+</html>

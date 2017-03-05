@@ -34,6 +34,15 @@ class Computador(db.Model):
         self.modelo = modeloComputador
         self.cpfCli = cpfCliente
 
+class Peca(db.Model):
+    __tablename__ = "Peca"
+
+    codPeca = db.Column(db.VARCHAR(50), primary_key=True)
+    descricao = db.Column(db.VARCHAR(200))
+
+    def __init__(self, cod, descr):
+        self.codPeca = cod
+        self.descricao = descr
 
 class UpgradeRevisao(db.Model):
     __tablename__ = "Upgrade_Revisao"
@@ -226,6 +235,56 @@ def editarUpgradeRevisao(numSerie, dataProg):
             return redirect(url_for("listaUpgradeRevisao"))
 
     return render_template("editarUpgradeRevisao.html", servico=servico)
+
+@app.route("/cadastrarPeca")
+def cadastrarPeca():
+    return render_template("cadastroPeca.html")
+
+@app.route("/cadastroPeca", methods=["GET", "POST"])
+def cadastroPeca():
+    if (request.method == "POST"):
+        codPeca = request.form.get("cod-peca")
+        descricao = request.form.get("descricao")
+
+        if (codPeca and descricao):
+            peca = Peca(codPeca, descricao)
+            db.session.add(peca)
+            db.session.commit()
+
+    return redirect(url_for("index"))
+
+@app.route("/listaPecas")
+def listaPecas():
+    pecas = Peca.query.all()
+    return render_template("listaPecas.html", pecas=pecas)
+
+
+@app.route("/excluirPeca/<string:codPeca>")
+def excluirPeca(codPeca):
+    peca = Peca.query.filter_by(codPeca=codPeca).first()
+    db.session.delete(peca)
+    db.session.commit()
+
+    return redirect(url_for("listaPecas"))
+
+
+@app.route("/editarPeca/<string:codPeca>", methods=["GET", "POST"])
+def editarPeca(codPeca):
+    peca = Peca.query.filter_by(codPeca=codPeca).first()
+
+    if (request.method == "POST"):
+        codPeca = request.form.get("cod-peca")
+        descricao = request.form.get("descricao")
+
+        if (codPeca and descricao):
+            peca.codPeca = codPeca
+            peca.descricao = descricao
+
+            db.session.commit()
+
+            return redirect(url_for("listaPecas"))
+
+    return render_template("editarPeca.html", peca=peca)
 
 
 if (__name__ == '__main__'):
