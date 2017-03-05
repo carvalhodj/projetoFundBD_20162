@@ -60,6 +60,23 @@ class UpgradeRevisao(db.Model):
         self.dataUltimoUpgrade = dataUlti
         self.dataExecutada = dataExec
 
+class PecaUpgradeRevisao(db.Model):
+    __tablename__ = "Peca_Upgrade_Revisao"
+
+    numSerieMaquina = db.Column(db.VARCHAR(50), ForeignKey("Upgrade_Revisao.numSerieComputador"), primary_key=True)
+    dataProgramadaServico = db.Column(db.VARCHAR(50), ForeignKey("Upgrade_Revisao.dataProgramada"), primary_key=True)
+    codPecaServico = db.Column(db.VARCHAR(50), ForeignKey("Peca.codPeca"), primary_key=True)
+    quantidade = db.Column(db.INTEGER)
+
+    numSerieComputador = relationship("UpgradeRevisao", foreign_keys=[numSerieMaquina])
+    dataProgramada = relationship("UpgradeRevisao", foreign_keys=[dataProgramadaServico])
+    codPeca = relationship("Peca", foreign_keys=[codPecaServico])
+
+    def __init__(self, numSerie, dataProg, codPecServ, quant):
+        self.numSerieMaquina = numSerie
+        self.dataProgramadaServico = dataProg
+        self.codPecaServico = codPecServ
+        self.quantidade = quant
 
 db.create_all()
 
@@ -177,6 +194,56 @@ def editarComputador(numSerie):
 
     return render_template("editarComputador.html", computador=computador)
 
+@app.route("/cadastrarPeca")
+def cadastrarPeca():
+    return render_template("cadastroPeca.html")
+
+@app.route("/cadastroPeca", methods=["GET", "POST"])
+def cadastroPeca():
+    if (request.method == "POST"):
+        codPeca = request.form.get("cod-peca")
+        descricao = request.form.get("descricao")
+
+        if (codPeca and descricao):
+            peca = Peca(codPeca, descricao)
+            db.session.add(peca)
+            db.session.commit()
+
+    return redirect(url_for("index"))
+
+@app.route("/listaPecas")
+def listaPecas():
+    pecas = Peca.query.all()
+    return render_template("listaPecas.html", pecas=pecas)
+
+
+@app.route("/excluirPeca/<string:codPeca>")
+def excluirPeca(codPeca):
+    peca = Peca.query.filter_by(codPeca=codPeca).first()
+    db.session.delete(peca)
+    db.session.commit()
+
+    return redirect(url_for("listaPecas"))
+
+
+@app.route("/editarPeca/<string:codPeca>", methods=["GET", "POST"])
+def editarPeca(codPeca):
+    peca = Peca.query.filter_by(codPeca=codPeca).first()
+
+    if (request.method == "POST"):
+        codPeca = request.form.get("cod-peca")
+        descricao = request.form.get("descricao")
+
+        if (codPeca and descricao):
+            peca.codPeca = codPeca
+            peca.descricao = descricao
+
+            db.session.commit()
+
+            return redirect(url_for("listaPecas"))
+
+    return render_template("editarPeca.html", peca=peca)
+
 
 @app.route("/cadastrarUpgradeRevisao")
 def cadastrarUpgradeRevisao():
@@ -236,56 +303,70 @@ def editarUpgradeRevisao(numSerie, dataProg):
 
     return render_template("editarUpgradeRevisao.html", servico=servico)
 
-@app.route("/cadastrarPeca")
-def cadastrarPeca():
-    return render_template("cadastroPeca.html")
+@app.route("/cadastrarPecaUpgradeRevisao")
+def cadastrarPecaUpgradeRevisao():
+    return render_template("cadastroPecaUpgradeRevisao.html")
 
-@app.route("/cadastroPeca", methods=["GET", "POST"])
-def cadastroPeca():
+
+@app.route("/cadastroPecaUpgradeRevisao", methods=["GET", "POST"])
+def cadastroPecaUpgradeRevisao():
     if (request.method == "POST"):
+        numeroSerie = request.form.get("num-serie")
+        dataProg = request.form.get("data-prog")
         codPeca = request.form.get("cod-peca")
-        descricao = request.form.get("descricao")
+        quant = request.form.get("quant")
 
-        if (codPeca and descricao):
-            peca = Peca(codPeca, descricao)
-            db.session.add(peca)
+        if (numeroSerie and dataProg and codPeca and quant):
+            pecaServico = PecaUpgradeRevisao(numeroSerie, dataProg, codPeca, quant)
+            db.session.add(pecaServico)
             db.session.commit()
 
     return redirect(url_for("index"))
 
-@app.route("/listaPecas")
-def listaPecas():
-    pecas = Peca.query.all()
-    return render_template("listaPecas.html", pecas=pecas)
+
+@app.route("/listaPecaUpgradeRevisao")
+def listaPecaUpgradeRevisao():
+    pecasServico = PecaUpgradeRevisao.query.all()
+    return render_template("listaPecaUpgradeRevisao.html", pecasServico=pecasServico)
 
 
-@app.route("/excluirPeca/<string:codPeca>")
-def excluirPeca(codPeca):
-    peca = Peca.query.filter_by(codPeca=codPeca).first()
-    db.session.delete(peca)
+@app.route("/excluirPecaUpgradeRevisao/<string:numSerie>/<string:dataProg>/<string:codPeca>")
+def excluirPecaUpgradeRevisao(numSerie, dataProg, codPeca):
+    pecaServico = PecaUpgradeRevisao.query.filter_by(numSerieMaquina=numSerie).filter_by(
+        dataProgramadaServico=dataProg).filter_by(codPecaServico=codPeca).first()
+    db.session.delete(pecaServico)
     db.session.commit()
 
-    return redirect(url_for("listaPecas"))
+    return redirect(url_for("listaPecaUpgradeRevisao"))
 
 
-@app.route("/editarPeca/<string:codPeca>", methods=["GET", "POST"])
-def editarPeca(codPeca):
-    peca = Peca.query.filter_by(codPeca=codPeca).first()
+@app.route("/editarPecaUpgradeRevisao/<string:numSerie>/<string:dataProg>/<string:codPeca>", methods=["GET", "POST"])
+def editarPecaUpgradeRevisao(numSerie, dataProg, codPeca):
+    pecaServico = PecaUpgradeRevisao.query.filter_by(numSerieMaquina=numSerie).filter_by(
+        dataProgramadaServico=dataProg).filter_by(codPecaServico=codPeca).first()
 
     if (request.method == "POST"):
+        numeroSerie = request.form.get("num-serie")
+        dataProg = request.form.get("data-prog")
         codPeca = request.form.get("cod-peca")
-        descricao = request.form.get("descricao")
+        quant = request.form.get("quant")
 
-        if (codPeca and descricao):
-            peca.codPeca = codPeca
-            peca.descricao = descricao
+        if (numeroSerie and dataProg and codPeca and quant):
+            pecaServico.numSerieMaquina = numeroSerie
+            pecaServico.dataProgramadaServico = dataProg
+            pecaServico.codPecaServico = codPeca
+            pecaServico.quantidade = quant
 
             db.session.commit()
 
-            return redirect(url_for("listaPecas"))
+            return redirect(url_for("listaPecaUpgradeRevisao"))
 
-    return render_template("editarPeca.html", peca=peca)
+    return render_template("editarPecaUpgradeRevisao.html", pecaServico=pecaServico)
 
+@app.errorhandler(Exception)
+def unhandled_exception(e):
+    app.logger.error("Unhadled exception: %s" % (e))
+    return render_template("error.html")
 
 if (__name__ == '__main__'):
     app.run(debug=True)
