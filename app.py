@@ -368,5 +368,5 @@ def unhandled_exception(e):
     app.logger.error("Unhadled exception: %s" % (e))
     return render_template("error.html")
 
-if (__name__ == '__main__'):
+if __name__ == '__main__':
     app.run(debug=True)
